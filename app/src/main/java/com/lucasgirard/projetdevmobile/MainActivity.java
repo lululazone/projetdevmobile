@@ -2,7 +2,9 @@ package com.lucasgirard.projetdevmobile;
 
 import static android.content.ContentValues.TAG;
 
-import android.app.Activity;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,69 +12,68 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class RegisterActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.register_layout);
-        Button regButton = findViewById(R.id.reg_button);
-        TextView email = findViewById(R.id.register_mailInput);
-        TextView password = findViewById(R.id.editTextTextPassword3);
-
+        setContentView(R.layout.activity_main);
+        TextView email = findViewById(R.id.mailInput);
+        TextView password = findViewById(R.id.passwordInput);
+        Button buttonRegister = findViewById(R.id.registerButton);
+        Button buttonLogin = findViewById(R.id.loginButton);
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
             reload();
         }
-        regButton.setOnClickListener(v -> {
-            createAccount(email.getText().toString(), password.getText().toString());
+
+        // On click create new register page
+        buttonRegister.setOnClickListener(v -> {
+            startActivity(new Intent(MainActivity.this, RegisterActivity.class));
         });
 
-
+        buttonLogin.setOnClickListener(v -> {
+            signIn(email.getText().toString(), password.getText().toString());
+        });
 
     }
 
 
-
-    private void createAccount(String email, String password) {
-        // [START create_user_with_email]
-        mAuth.createUserWithEmailAndPassword(email, password)
+    private void signIn(String email, String password) {
+        // [START sign_in_with_email]
+        mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "createUserWithEmail:success");
+                            Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                            Intent intent = new Intent(MainActivity.this, HomePage.class);
+                            SingletonFirebase.getInstance().setUserId(user.getUid());
+                            intent.putExtra("userId", user.getUid());
                             startActivity(intent);
-
                         } else {
                             // If sign in fails, display a message to the user.
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(RegisterActivity.this, "Authentication failed.",
+                            Log.w(TAG, "signInWithEmail:failure", task.getException());
+                            Toast.makeText(MainActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
 
                         }
                     }
                 });
-        // [END create_user_with_email]
+        // [END sign_in_with_email]
     }
 
-
-
-
     private void reload() { }
-}
 
+
+}
