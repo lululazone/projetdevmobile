@@ -6,15 +6,21 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,6 +41,11 @@ public class ToDoFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    private Animation rotateOpen;
+    private Animation rotateClose;
+    private Animation fromBottom;
+    private Animation toBottom;
     public String UserId;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     ListView listView;
@@ -86,7 +97,24 @@ public class ToDoFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_to_do, container, false);
+        rotateOpen = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_open_anim);
+        rotateClose = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_close_anim);
+        fromBottom = AnimationUtils.loadAnimation(getActivity(), R.anim.from_bottom_anim);
+        toBottom = AnimationUtils.loadAnimation(getActivity(), R.anim.to_bottom_anim);
+        FloatingActionButton more_floating_button = view.findViewById(R.id.more_floating_button);
+        FloatingActionButton add_floating_button = view.findViewById(R.id.add_floating_button);
+        FloatingActionButton delete_floating_button = view.findViewById(R.id.remove_floating_button);
+        more_floating_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                OnClickMore();
+
+            }
+
+
+        });
         listView = (ListView) view.findViewById(R.id.listView);
+        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         Bundle args = getArguments();
         UserId = args.getString("userId");
         if(UserId == null || UserId.isEmpty()){
@@ -99,18 +127,92 @@ public class ToDoFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(listView.isItemChecked(position)){
+                //check if one or more items are checked
+                int count = listView.getCheckedItemCount();
+                if (count > 0) {
+                    //if one or more items are checked, then show the delete button
+                    more_floating_button.show();
+                } else {
+                    //if no items are checked, then hide the delete button
+                    more_floating_button.hide();
 
-                    //DatabaseReference myRef = database.getReference("users").child(UserId).child("todo").child(String.valueOf(position));
-                    //myRef.removeValue();
                 }
+
+
+                //get checked items
+            }
+
+
+        });
+
+        arrayAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_list_item_multiple_choice, list);
+        listView.setAdapter(arrayAdapter);
+
+
+        delete_floating_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    OnClickDelete();
             }
         });
 
-        arrayAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, list);
-        listView.setAdapter(arrayAdapter);
+        add_floating_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                OnClickAdd();
+            }
+        });
         // Inflate the layout for this fragment
         return view;
+    }
+
+    public void OnClickMore(){
+        FloatingActionButton more_floating_button = getView().findViewById(R.id.more_floating_button);
+        FloatingActionButton add_floating_button = getView().findViewById(R.id.add_floating_button);
+        FloatingActionButton delete_floating_button = getView().findViewById(R.id.remove_floating_button);
+        if(more_floating_button.getRotation() == 0){
+            more_floating_button.startAnimation(rotateOpen);
+            add_floating_button.startAnimation(fromBottom);
+            delete_floating_button.startAnimation(fromBottom);
+            add_floating_button.setVisibility(View.VISIBLE);
+            delete_floating_button.setVisibility(View.VISIBLE);
+            add_floating_button.setClickable(true);
+            delete_floating_button.setClickable(true);
+            more_floating_button.setRotation(45);
+        }else{
+            more_floating_button.startAnimation(rotateClose);
+            add_floating_button.startAnimation(toBottom);
+            delete_floating_button.startAnimation(toBottom);
+            add_floating_button.setClickable(false);
+            delete_floating_button.setClickable(false);
+            add_floating_button.setVisibility(View.INVISIBLE);
+            delete_floating_button.setVisibility(View.INVISIBLE);
+            more_floating_button.setRotation(0);
+        }
+    }
+
+
+    public void OnClickDelete(){
+        //get checked items text
+        SparseBooleanArray checked = listView.getCheckedItemPositions();
+        for (int i = 0; i < checked.size(); i++) {
+            Log.d("checked", checked.toString());
+            // Item position in adapter
+            int position = checked.keyAt(i);
+            // Add sport if it is checked i.e.) == TRUE!
+            if (checked.valueAt(i))
+                //list.remove(position);
+                //remove from database
+                Log.d("Trying to delete: ",String.valueOf(position));
+                DatabaseReference myRef = database.getReference("users").child(UserId).child("todo").child(list.get(position).toString());
+                myRef.removeValue();
+        }
+
+
+    }
+
+    public void OnClickAdd(){
+        getFragmentManager().beginTransaction().replace(R.id.fragment_container, new AddTodoFragment()).commit();
     }
 
 
