@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import com.lucasgirard.projetdevmobile.databinding.FragmentFirstBinding;
 
-public class FirstFragment extends Fragment {
+public class FirstFragment extends BaseFragment {
 
 private FragmentFirstBinding binding;
 

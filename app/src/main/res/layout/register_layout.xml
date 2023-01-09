@@ -5,90 +5,101 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="bottom"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/reg_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Apply" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="150dp"
-        android:gravity="center"
-        android:orientation="horizontal"
+    <Button
+        android:id="@+id/register_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/neon"
+        android:text="Apply"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/retype_pw_input"
+        app:rippleColor="#9C5858" />
 
-        <TextView
-            android:id="@+id/pwTitle"
-            android:layout_width="77dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Password:"
-            android:textSize="20sp" />
+    <EditText
+        android:id="@+id/retype_pw_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:fontFamily="@font/neon"
+        android:hint="Retype password here..."
+        android:inputType="textPassword"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reg_repw_text" />
 
-        <EditText
-            android:id="@+id/editTextTextPassword3"
-            android:layout_width="276dp"
-            android:layout_height="70dp"
-            android:ems="10"
-            android:hint="password here..."
-            android:inputType="textPassword"
-            android:textSize="20sp" />
+    <TextView
+        android:id="@+id/reg_repw_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/neon"
+        android:text="Re-type password:"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reg_pw_input" />
 
-    </LinearLayout>
+    <EditText
+        android:id="@+id/reg_pw_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:fontFamily="@font/neon"
+        android:hint="My password here..."
+        android:inputType="textPassword"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reg_pw_text" />
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="horizontal">
+    <TextView
+        android:id="@+id/reg_pw_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/neon"
+        android:text="Password:"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reg_mail_input" />
 
-        <TextView
-            android:id="@+id/reg_mail_title"
-            android:layout_width="wrap_content"
-            android:layout_height="45dp"
-            android:layout_weight="1"
-            android:text="Email:"
-            android:textSize="20sp" />
+    <EditText
+        android:id="@+id/reg_mail_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:fontFamily="@font/neon"
+        android:hint="My mail here..."
+        android:inputType="textEmailAddress"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mail_reg_text" />
 
-        <EditText
-            android:id="@+id/register_mailInput"
-            android:layout_width="283dp"
-            android:layout_height="63dp"
-            android:layout_weight="1"
-            android:ems="10"
-            android:hint="Mail here..."
-            android:inputType="textEmailAddress"
-            android:textSize="20sp" />
+    <TextView
+        android:id="@+id/mail_reg_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="128dp"
+        android:fontFamily="@font/neon"
+        android:text="Mail:"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        tools:layout_editor_absoluteX="48dp">
-
-        <TextView
-            android:id="@+id/registerPageTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="Register now !"
-            android:textSize="48sp" />
-
-    </LinearLayout>
-
+    <TextView
+        android:id="@+id/regText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/neon"
+        android:text="Register now ! "
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="#000000"
+        android:textSize="34sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,6 +3,8 @@ package com.lucasgirard.projetdevmobile;
 import static android.content.ContentValues.TAG;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +26,7 @@ import com.lucasgirard.projetdevmobile.databinding.ActivityMainBinding;
 public class HomePage extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
     private FirebaseAuth mAuth;
     public float x1,x2,y1,y2;
+    public MainActivity ma = new MainActivity();
 
     public String UserId;
     BottomNavigationView bottomNavigationView;
@@ -45,6 +48,29 @@ public class HomePage extends AppCompatActivity implements BottomNavigationView.
             UserId = SingletonFirebase.getInstance().getUserId();
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        // Créer une boîte de dialogue de confirmation
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Êtes-vous sûr de vouloir quitter ?")
+                .setCancelable(false)
+                .setPositiveButton("Oui", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Si l'utilisateur appuie sur "Oui", on ferme l'application
+                        finishAffinity();
+                    }
+                })
+                .setNegativeButton("Non", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Si l'utilisateur appuie sur "Non", on annule la boîte de dialogue
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
 
 
 

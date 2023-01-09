@@ -2,11 +2,15 @@ package com.lucasgirard.projetdevmobile;
 
 import static android.content.ContentValues.TAG;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.preference.PreferenceManager;
 
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -19,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -35,7 +40,7 @@ import java.util.List;
  * Use the {@link ToDoFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ToDoFragment extends Fragment {
+public class ToDoFragment extends BaseFragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -47,6 +52,7 @@ public class ToDoFragment extends Fragment {
     private Animation fromBottom;
     private Animation toBottom;
     public String UserId;
+    public SharedPreferences preferences;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     ListView listView;
     List list = new ArrayList();
@@ -83,6 +89,18 @@ public class ToDoFragment extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+        }
+        preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String fontName = preferences.getString("font_choice", "");
+        int fontStyle = Typeface.NORMAL;
+        Typeface newTypeface2 = Typeface.create(fontName, fontStyle);
+        if (fontName.equals("erica_one")) {
+            newTypeface2 = Typeface.createFromAsset(getActivity().getAssets(), "font/erica_one.ttf");
+        } else if (fontName.equals("neon")) {
+            newTypeface2 = Typeface.createFromAsset(getActivity().getAssets(), "font/neon.ttf");
+        }
+        if (getView() != null) {
+            setTypeface((ViewGroup) getView(), newTypeface2);
         }
 
 
@@ -191,10 +209,22 @@ public class ToDoFragment extends Fragment {
         }
     }
 
+    private void setTypeface(ViewGroup root, Typeface typeface) {
+        for (int i = 0; i < root.getChildCount(); i++) {
+            View child = root.getChildAt(i);
+            if (child instanceof TextView) {
+                ((TextView) child).setTypeface(typeface);
+            } else if (child instanceof ViewGroup) {
+                setTypeface((ViewGroup) child, typeface);
+            }
+        }
+    }
+
 
     public void OnClickDelete(){
         //get checked items text
         SparseBooleanArray checked = listView.getCheckedItemPositions();
+
         for (int i = 0; i < checked.size(); i++) {
             Log.d("checked", checked.toString());
             // Item position in adapter

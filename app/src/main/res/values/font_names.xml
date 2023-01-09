@@ -1,3 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string-array name="font_names">
+        <item>erica_one</item>
+        <item>neon</item>
+    </string-array>
+
+    <string-array name="font_styles">
+        <item>bold</item>
+        <item>bold italic</item>
+        <item>italic</item>
+        <item>normal</item>
+    </string-array>
+
+
 </resources>

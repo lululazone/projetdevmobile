@@ -26,9 +26,10 @@ public class RegisterActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register_layout);
-        Button regButton = findViewById(R.id.reg_button);
-        TextView email = findViewById(R.id.register_mailInput);
-        TextView password = findViewById(R.id.editTextTextPassword3);
+        Button regButton = findViewById(R.id.register_button);
+        TextView email = findViewById(R.id.reg_mail_input);
+        TextView password = findViewById(R.id.reg_pw_input);
+        TextView repassword = findViewById(R.id.reg_repw_text);
 
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -36,7 +37,12 @@ public class RegisterActivity extends Activity {
             reload();
         }
         regButton.setOnClickListener(v -> {
-            createAccount(email.getText().toString(), password.getText().toString());
+            if(password.getText().toString().equals(repassword.getText().toString())) {
+                createAccount(email.getText().toString(), password.getText().toString());
+            }
+            else{
+                Toast.makeText(RegisterActivity.this, "Passwords don't match", Toast.LENGTH_SHORT).show();
+            }
         });
 
 
@@ -47,6 +53,8 @@ public class RegisterActivity extends Activity {
 
     private void createAccount(String email, String password) {
         // [START create_user_with_email]
+
+
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
