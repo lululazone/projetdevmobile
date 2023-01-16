@@ -26,6 +26,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -60,6 +61,7 @@ public class ToDoFragment extends BaseFragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    public String fontName;
 
     public ToDoFragment() {
         // Required empty public constructor
@@ -91,13 +93,28 @@ public class ToDoFragment extends BaseFragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String fontName = preferences.getString("font_choice", "");
+        fontName = preferences.getString("font_choice", "");
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("font");
+        // Read from the database
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                fontName = dataSnapshot.getValue(String.class);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+
+            }
+        });
         int fontStyle = Typeface.NORMAL;
         Typeface newTypeface2 = Typeface.create(fontName, fontStyle);
         if (fontName.equals("erica_one")) {
-            newTypeface2 = Typeface.createFromAsset(getActivity().getAssets(), "font/erica_one.ttf");
+            newTypeface2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/erica_one.ttf");
         } else if (fontName.equals("neon")) {
-            newTypeface2 = Typeface.createFromAsset(getActivity().getAssets(), "font/neon.ttf");
+            newTypeface2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/neon.ttf");
         }
         if (getView() != null) {
             setTypeface((ViewGroup) getView(), newTypeface2);
@@ -134,7 +151,8 @@ public class ToDoFragment extends BaseFragment {
         listView = (ListView) view.findViewById(R.id.listView);
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         Bundle args = getArguments();
-        UserId = args.getString("userId");
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        UserId = mAuth.getCurrentUser().getUid();
         if(UserId == null || UserId.isEmpty()){
             UserId = SingletonFirebase.getInstance().getUserId();
         }

@@ -1,5 +1,6 @@
 package com.lucasgirard.projetdevmobile;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,8 +11,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,6 +33,8 @@ public class AddTodoFragment extends BaseFragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private String fontName;
+    private Typeface newTypeface2;
 
     public AddTodoFragment() {
         // Required empty public constructor
@@ -58,6 +65,35 @@ public class AddTodoFragment extends BaseFragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("font");
+        // Read from the database
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                fontName = dataSnapshot.getValue(String.class);
+                if (fontName.equals("erica_one")){
+                    newTypeface2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/erica_one.ttf");
+                    setTypeface((ViewGroup) getView(), newTypeface2);
+                }
+                else if(fontName.equals("neon")){
+                    newTypeface2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/neon.ttf");
+                    setTypeface((ViewGroup) getView(), newTypeface2);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+
+            }
+        });
+        int fontStyle = Typeface.NORMAL;
+        if(newTypeface2!=null){
+            if (getView() != null) {
+                setTypeface((ViewGroup) getView(), newTypeface2);
+            }}
     }
 
     @Override
@@ -79,6 +115,17 @@ public class AddTodoFragment extends BaseFragment {
             }
         });
         return view;
+    }
+
+    private void setTypeface(ViewGroup root, Typeface typeface) {
+        for (int i = 0; i < root.getChildCount(); i++) {
+            View child = root.getChildAt(i);
+            if (child instanceof TextView) {
+                ((TextView) child).setTypeface(typeface);
+            } else if (child instanceof ViewGroup) {
+                setTypeface((ViewGroup) child, typeface);
+            }
+        }
     }
 
 
