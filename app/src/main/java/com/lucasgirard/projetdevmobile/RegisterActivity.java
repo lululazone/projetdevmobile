@@ -29,7 +29,7 @@ public class RegisterActivity extends Activity {
         Button regButton = findViewById(R.id.register_button);
         TextView email = findViewById(R.id.reg_mail_input);
         TextView password = findViewById(R.id.reg_pw_input);
-        TextView repassword = findViewById(R.id.reg_repw_text);
+        TextView repassword = findViewById(R.id.retype_pw_input);
 
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -37,10 +37,12 @@ public class RegisterActivity extends Activity {
             reload();
         }
         regButton.setOnClickListener(v -> {
-            if(password.getText().toString().equals(repassword.getText().toString())) {
+            if(password.getText().toString().equals(repassword.getText().toString())){
                 createAccount(email.getText().toString(), password.getText().toString());
             }
             else{
+                Log.d(TAG,"Password 1: "+password.getText().toString());
+                Log.d(TAG,"Password 2: "+repassword.getText().toString());
                 Toast.makeText(RegisterActivity.this, "Passwords don't match", Toast.LENGTH_SHORT).show();
             }
         });

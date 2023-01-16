@@ -20,7 +20,21 @@ public class SettingFragment extends PreferenceFragmentCompat {
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.root_preferences,rootKey);
-        //get shared preferences
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String fontName1 = sharedPref.getString("font_choice", "erica_one");
+        int fontStyle1 = Typeface.NORMAL;
+        Typeface newTypeface = Typeface.create(fontName1, fontStyle1);
+        if (fontName1.equals("erica_one")) {
+            newTypeface = Typeface.createFromAsset(getActivity().getAssets(), "font/erica_one.ttf");
+        } else if (fontName1.equals("neon")) {
+            newTypeface = Typeface.createFromAsset(getActivity().getAssets(), "font/neon.ttf");
+        }
+
+        //avoid null pointer exception
+
+        if(getView() != null) {
+            setTypeface((ViewGroup) getView(), newTypeface);
+        }
 
 
 
