@@ -5,7 +5,7 @@ Repo du projet dev mobile
 - Utiliser la branche DEV-22 pour la dernière version.
 
 
-#Fonctions implémentée: 
+# Fonctions implémentée: 
 
 - [X] Utilisation de l'Api Preference
 - [X] Ecriture/lecture dans un Fichier: Lecture de police/ image de background
