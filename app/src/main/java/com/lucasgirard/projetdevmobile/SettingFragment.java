@@ -42,16 +42,20 @@ public class SettingFragment extends PreferenceFragmentCompat {
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                fontName = dataSnapshot.getValue(String.class);
-                int fontStyle = Typeface.NORMAL;
-                if(fontName == "erica_one"){
-                    newTypeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/erica_one.ttf");
-                }
-                else if(fontName == "neon"){
-                    newTypeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/neon.ttf");
-                }
-                if(getView() != null) {
-                    setTypeface((ViewGroup) getView(), newTypeface);
+                try{
+                    fontName = dataSnapshot.getValue(String.class);
+                    int fontStyle = Typeface.NORMAL;
+                    if(fontName == "erica_one"){
+                        newTypeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/erica_one.ttf");
+                    }
+                    else if(fontName == "neon"){
+                        newTypeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/neon.ttf");
+                    }
+                    if(getView() != null) {
+                        setTypeface((ViewGroup) getView(), newTypeface);
+                    }}
+                catch (Exception e){
+                    Log.w("TAG", "Failed to read value.", e);
                 }
             }
 

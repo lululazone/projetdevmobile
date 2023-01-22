@@ -72,14 +72,18 @@ public class AddTodoFragment extends BaseFragment {
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                fontName = dataSnapshot.getValue(String.class);
-                if (fontName.equals("erica_one")){
-                    newTypeface2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/erica_one.ttf");
-                    setTypeface((ViewGroup) getView(), newTypeface2);
-                }
-                else if(fontName.equals("neon")){
-                    newTypeface2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/neon.ttf");
-                    setTypeface((ViewGroup) getView(), newTypeface2);
+                try {
+                    fontName = dataSnapshot.getValue(String.class);
+                    if (fontName.equals("erica_one")) {
+                        newTypeface2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/erica_one.ttf");
+                        setTypeface((ViewGroup) getView(), newTypeface2);
+                    } else if (fontName.equals("neon")) {
+                        newTypeface2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/neon.ttf");
+                        setTypeface((ViewGroup) getView(), newTypeface2);
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
             }

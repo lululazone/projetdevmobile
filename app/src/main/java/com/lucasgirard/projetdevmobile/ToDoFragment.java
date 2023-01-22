@@ -113,6 +113,7 @@ public class ToDoFragment extends BaseFragment {
         Typeface newTypeface2 = Typeface.create(fontName, fontStyle);
         if (fontName.equals("erica_one")) {
             newTypeface2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/erica_one.ttf");
+
         } else if (fontName.equals("neon")) {
             newTypeface2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/neon.ttf");
         }
@@ -254,6 +255,8 @@ public class ToDoFragment extends BaseFragment {
                 Log.d("Trying to delete: ",String.valueOf(position));
                 DatabaseReference myRef = database.getReference("users").child(UserId).child("todo").child(list.get(position).toString());
                 myRef.removeValue();
+                list.remove(position);
+                arrayAdapter.notifyDataSetChanged();
         }
 
 

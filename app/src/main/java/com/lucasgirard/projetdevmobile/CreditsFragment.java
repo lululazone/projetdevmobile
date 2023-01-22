@@ -73,19 +73,22 @@ public class CreditsFragment extends BaseFragment {
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                String fontName = dataSnapshot.getValue(String.class);
-                int fontStyle = Typeface.NORMAL;
-                if (fontName.equals("erica_one")){
-                    newTypeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/erica_one.ttf");
-                }
-                else if(fontName.equals("neon")){
-                    newTypeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/neon.ttf");
-                }
+                try {
+                    // This method is called once with the initial value and again
+                    // whenever data at this location is updated.
+                    String fontName = dataSnapshot.getValue(String.class);
+                    int fontStyle = Typeface.NORMAL;
+                    if (fontName.equals("erica_one")) {
+                        newTypeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/erica_one.ttf");
+                    } else if (fontName.equals("neon")) {
+                        newTypeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/neon.ttf");
+                    }
 
-                if(getView() != null) {
-                    setTypeface((ViewGroup) getView(), newTypeface);
+                    if (getView() != null) {
+                        setTypeface((ViewGroup) getView(), newTypeface);
+                    }
+                } catch (Exception e) {
+                    Log.w(TAG, "Failed to read value.", e);
                 }
 
             }
